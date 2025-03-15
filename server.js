@@ -1,3 +1,14 @@
+const mongoose = require("mongoose");
+mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
+    .then(() => {
+        console.log("CONNECTION OPEN")
+    })
+    .catch(err => {
+        console.log("THERE WAS AN ERROR");
+        console.log(err)
+    });
+
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
