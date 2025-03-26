@@ -1,4 +1,4 @@
-module.exports = [{
+module.exports.products = [{
     name: 'Chicken Stalks',
     price: 1.00,
     category: 'vegetable'
@@ -23,4 +23,3 @@ module.exports = [{
     price: 1.00,
     category: 'vegetable'
 }]
-
