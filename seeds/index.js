@@ -2,7 +2,6 @@ const Product = require('../models/product');
 const mongoose = require("mongoose");
 const { products }  = require('./products')
 
-
 mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
     .then(() => {
         console.log("CONNECTION OPEN");
