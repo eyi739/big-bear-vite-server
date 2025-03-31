@@ -26,8 +26,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 //     console.log("Database connected")
 // })
 
-
 app.use(cors(corsOptions));
+
+app.get("/products", async (req,res) => {
+    const products = await Product.find({})
+    res.render('produccts/index')
+})
 
 app.get("/api", (req,res) => {
     res.json({fruits: ["apple", "orange", "banana", "green grapes", "guavas" ]});
