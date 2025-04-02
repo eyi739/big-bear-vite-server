@@ -1,24 +1,31 @@
 import express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackConfig from '../webpack.config.cjs'
+import webpackConfig from '../webpack.config.cjs';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
+
+import path from 'path';
+import cors from 'cors';
+
+import Product from '../models/product.js'
+
+import mongoose from 'mongoose';
 
 const HOST = process.env.SERVER_HOST;
 const PORT = process.env.SERVER_PORT;
 
 // const express = require("express");
-const path = require('path');
+// const path = require('path');
 
 const app = express();
 
-const cors = require("cors");
+// const cors = require("cors");
 const corsOptions = {
     origin: ["http://localhost:5173"]
 }
 
-const Product = require('../models/product');
-const mongoose = require("mongoose");
+// const Product = require('../models/product');
+// const mongoose = require("mongoose");
 // const { webpack } = require("webpack");
 
 
@@ -55,7 +62,8 @@ app.use(WebpackHotMiddleware(compiler, {}));
 app.use(cors(corsOptions));
 
 const router = express.Router();
-app.use('/api', router);
+
+// app.use('/api', router);
 
 app.get('/home', (req,res) => {
     return res.json({message: 'HOME PAGE DATA FROM EXPRESS'})

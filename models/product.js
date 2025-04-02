@@ -1,5 +1,8 @@
-const mongoose = require('mongoose');
-const Review = require('./review')
+import mongoose from 'mongoose';
+import Review from './review.js';
+
+// const mongoose = require('mongoose');
+// const Review = require('./review')
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema ({
@@ -54,11 +57,11 @@ const productSchema = new Schema ({
     }
 }, opts);
 
-productSchema.virtual('properties.popUpMarkup').get(function(){
-    return `
-    <strong><a href="/products/${this._id}">${this.name}</a></strong>
-    <p>${this.description.substring(0 , 20)}...</p>`
-})
+// productSchema.virtual('properties.popUpMarkup').get(function(){
+//     return `
+//     <strong><a href="/products/${this._id}">${this.name}</a></strong>
+//     <p>${this.description.substring(0 , 20)}...</p>`
+// })
 
 // productSchema.virtual('properties.popUpMarkup').get(function () {
 //     return `
@@ -74,4 +77,6 @@ productSchema.post('findOneAndDelete', async function(doc){
     })
 })
 
-module.exports = mongoose.model('Product', productSchema);
+const Product = mongoose.model('Product', productSchema);
+
+export default Product;
