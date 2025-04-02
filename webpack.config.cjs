@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: 'development',
     target: 'web',
-    entry: './src/client/index.jsx',
+    entry: ['webpack-hot-middleware/client?reload=true&timeout=2000','./src/client/index.jsx'],
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/',
@@ -13,13 +13,14 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            tempate: './src/client/index.html',
+            template: '../src/client/index.html',
         }),
         new webpack.EnvironmentPlugin([
             'NODE_ENV',
             'SERVER_HOST',
             'SERVER_PORT',
-        ])
+        ]),
+        new webpack.HotModuleReplacementPlugin()
     ],
     module: {
         rules: [

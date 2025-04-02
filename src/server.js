@@ -1,13 +1,25 @@
-const express = require("express");
+import express from 'express';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackConfig from '../webpack.config.cjs'
+import WebpackHotMiddleware from 'webpack-hot-middleware';
+
+const HOST = process.env.SERVER_HOST;
+const PORT = process.env.SERVER_PORT;
+
+// const express = require("express");
 const path = require('path');
+
 const app = express();
+
 const cors = require("cors");
 const corsOptions = {
     origin: ["http://localhost:5173"]
 }
-const Product = require('../models/product');
 
+const Product = require('../models/product');
 const mongoose = require("mongoose");
+// const { webpack } = require("webpack");
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
@@ -27,27 +39,33 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 //     console.log("Database connected")
 // })
 
-// app.set('views', path.join(__dirname, 'big-bear-vite', 'src', 'views'));
+// Logging middleware
+app.use((req,res, next) => {
+    console.log('--------------')
+    console.log(`Request: ${req.method}:${req.url}`)
+    return next();
+})
 
-// C:\Users\yieri\OneDrive\Desktop\Sites\big-bear-vite\src\views\products\ProductIndex.jsx
+const compiler = webpack(webpackConfig);
+app.use(webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath
+}))
+app.use(WebpackHotMiddleware(compiler, {}));
 
 app.use(cors(corsOptions));
 
+const router = express.Router();
+app.use('/api', router);
 
-app.get('/products', (req,res) => {
-    res.send('HELLO');
+app.get('/home', (req,res) => {
+    return res.json({message: 'HOME PAGE DATA FROM EXPRESS'})
 });
 
 app.get('/api', (req,res) => {
-    res.json({fruits: ["apple", "orange", "banana", "green grapes", "guavas" ]});
+    res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 });
 
-// app.get('/products', async (req, res) => {
-//     const products = await Product.find({});
-//     console.log(products);
-//     res.send("ALL PRODUCTS WILL BE HERE");
-// })
 
-app.listen(8080, () => {
-    console.log("Server started on port 8080");
+app.listen(PORT, HOST, () => {
+    console.log(`Server started on port ${HOST}:${PORT}`);
 });
