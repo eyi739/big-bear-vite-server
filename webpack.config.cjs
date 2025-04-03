@@ -1,8 +1,10 @@
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+
+module.exports = (env) = {
     mode: 'development',
     target: 'web',
     entry: {
@@ -22,7 +24,12 @@ module.exports = {
             'SERVER_HOST',
             'SERVER_PORT',
         ]),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new Dotenv({
+            // path: path.resolve(__dirname, '.env'), // Path to .env file (this is the default)
+            path: './.env',
+            systemvars: true, // Load system environment variables as well
+          }),
     ],
     module: {
         rules: [
