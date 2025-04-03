@@ -2,7 +2,7 @@ import express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackConfig from '../webpack.config.cjs';
-import WebpackHotMiddleware from 'webpack-hot-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import path from 'path';
 import cors from 'cors';
@@ -46,8 +46,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 //     console.log("Database connected")
 // })
 
+
 // Logging middleware
-app.use((req,res, next) => {
+app.use((req,res,next) => {
     console.log('--------------')
     console.log(`Request: ${req.method}:${req.url}`)
     return next();
@@ -57,7 +58,7 @@ const compiler = webpack(webpackConfig);
 app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath
 }))
-app.use(WebpackHotMiddleware(compiler, {}));
+app.use(webpackHotMiddleware(compiler, {}));
 
 app.use(cors(corsOptions));
 
@@ -65,11 +66,11 @@ const router = express.Router();
 
 // app.use('/api', router);
 
-app.get('/home', (req,res) => {
+router.get('/home', (req,res) => {
     return res.json({message: 'HOME PAGE DATA FROM EXPRESS'})
 });
 
-app.get('/api', (req,res) => {
+router.get('/api', (req,res) => {
     res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 });
 

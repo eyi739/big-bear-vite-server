@@ -5,7 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: 'development',
     target: 'web',
-    entry: ['webpack-hot-middleware/client?reload=true&timeout=2000','./src/client/index.jsx'],
+    entry: {
+        main: ['webpack-hot-middleware/client?reload=true&timeout=2000','../src/client/index.jsx']
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/',
