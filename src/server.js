@@ -8,8 +8,9 @@ import path from 'path';
 import cors from 'cors';
 
 import Product from '../models/product.js'
-
 import mongoose from 'mongoose';
+
+const app = express();
 
 const HOST = process.env.SERVER_HOST;
 const PORT = process.env.SERVER_PORT;
@@ -17,13 +18,12 @@ const PORT = process.env.SERVER_PORT;
 // const express = require("express");
 // const path = require('path');
 
-const app = express();
-
 // const cors = require("cors");
 const corsOptions = {
     origin: ["http://localhost:5173"]
 }
 
+app.use(cors(corsOptions));
 // const Product = require('../models/product');
 // const mongoose = require("mongoose");
 // const { webpack } = require("webpack");
@@ -46,35 +46,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 //     console.log("Database connected")
 // })
 
-
-// Logging middleware
-app.use((req,res,next) => {
-    console.log('--------------')
-    console.log(`Request: ${req.method}:${req.url}`)
-    return next();
-})
-
-const compiler = webpack(webpackConfig);
-app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath
-}))
-app.use(webpackHotMiddleware(compiler, {}));
-
-app.use(cors(corsOptions));
-
 const router = express.Router();
-
-// app.use('/api', router);
-
-router.get('/home', (req,res) => {
+app.get('/home', (req,res) => {
     return res.json({message: 'HOME PAGE DATA FROM EXPRESS'})
 });
 
-router.get('/api', (req,res) => {
+app.get('/api', (req,res) => {
     res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 });
 
 
-app.listen(PORT, HOST, () => {
-    console.log(`Server started on port ${HOST}:${PORT}`);
+app.listen(8080, () => {
+    console.log("Server started on port 8080");
 });

@@ -4,11 +4,11 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
-module.exports = (env) = {
+module.exports = {
     mode: 'development',
     target: 'web',
     entry: {
-        main: ['webpack-hot-middleware/client?reload=true&timeout=2000','../src/client/index.jsx']
+        main: ['webpack-hot-middleware/client?reload=true&timeout=2000','../../src/client/index.jsx']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -17,7 +17,7 @@ module.exports = (env) = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: '../src/client/index.html',
+            template: '../../src/client/index.html',
         }),
         new webpack.EnvironmentPlugin([
             'NODE_ENV',
