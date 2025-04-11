@@ -7,13 +7,14 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import path from 'path';
 import cors from 'cors';
 
-import Product from '../models/product.js'
+import Product from './models/product.js'
 import mongoose from 'mongoose';
 
 const app = express();
+const port = 8080;
 
-const HOST = process.env.SERVER_HOST;
-const PORT = process.env.SERVER_PORT;
+// const HOST = process.env.SERVER_HOST;
+// const PORT = process.env.SERVER_PORT;
 
 // const express = require("express");
 // const path = require('path');
@@ -47,15 +48,18 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 // })
 
 const router = express.Router();
-app.get('/home', (req,res) => {
-    return res.json({message: 'HOME PAGE DATA FROM EXPRESS'})
+
+app.get('/api/home', (req,res) => {
+     res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE'});
 });
+
+
 
 app.get('/api', (req,res) => {
     res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 });
 
 
-app.listen(8080, () => {
-    console.log("Server started on port 8080");
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
 });

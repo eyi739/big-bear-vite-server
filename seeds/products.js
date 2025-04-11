@@ -1,4 +1,4 @@
-module.exports.products = [{
+export const products = [{
     name: 'Chicken Stalks',
     price: 1.00,
     category: 'vegetable'
