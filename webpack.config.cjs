@@ -8,7 +8,7 @@ module.exports = {
     mode: 'development',
     target: 'web',
     entry: {
-        main: ['webpack-hot-middleware/client?reload=true&timeout=2000','../../src/client/index.jsx']
+        main: ['webpack-hot-middleware/client?reload=true&timeout=2000','../big-bear-vite/src/main.jsx']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -17,7 +17,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: '../../src/client/index.html',
+            template: '../big-bear-vite/index.html',
         }),
         new webpack.EnvironmentPlugin([
             'NODE_ENV',
@@ -34,13 +34,13 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js | jsx)$/,
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            '@babel/preset-env',
+                            ['@babel/preset-env', {}],
                             ['@babel/preset-react', {'runtime' :  'automatic'}]
                         ]
                     }
