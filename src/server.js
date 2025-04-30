@@ -18,11 +18,21 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
         console.log(err);
     });
 
+// const HOST = import.meta.env.VITE_SERVER_HOST;
+// const PORT = import.meta.env.VITE_SERVER_PORT;
+
 const HOST = process.env.VITE_SERVER_HOST;
 const PORT = process.env.VITE_SERVER_PORT;
 
+ // server.js
+//  require('dotenv').config();
+import "dotenv/config.js";
+ // Now you can access env variables using process.env
+//  const port = process.env.VITE_SERVER_PORT || 8080;
+ const port = 8080;
+
 const app = express();
-const port = 8080;
+
 
 app.use(cors(corsOptions));
 // Logging Middleware 
@@ -41,6 +51,7 @@ const ApiRouter = express.Router();
 
 ApiRouter.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE'});
+     console.log(HOST);
 });
 ApiRouter.get('/about', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE ABOUT PAGE'});
@@ -59,6 +70,6 @@ app.get('/api', (req,res) => {
 
 app.use('/api', ApiRouter);
 
-app.listen(PORT, HOST, () => {
+app.listen(8080, HOST, PORT, () => {
     console.log(`Server started on port ${HOST}: ${PORT}`);
 });
