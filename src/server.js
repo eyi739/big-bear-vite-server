@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 
 import path from 'path';
 import cors from 'cors';
+
+
 const corsOptions = {
     origin: ["http://localhost:5173"]
 }
@@ -22,17 +24,15 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 // const HOST = import.meta.env.VITE_SERVER_HOST;
 // const PORT = import.meta.env.VITE_SERVER_PORT;
 
-const HOST = process.env.VITE_SERVER_HOST;
-const PORT = process.env.VITE_SERVER_PORT;
+const HOST = process.env.SERVER_HOST;
+const PORT = process.env.SERVER_PORT;
 
 
 import "dotenv/config.js";
  // Now you can access env variables using process.env
- const port = 8080 || process.env.VITE_SERVER_PORT;
+ const port = process.env.SERVER_PORT;
 
 const app = express();
-
-
 app.use(cors(corsOptions));
 
 // Logging Middleware 
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 const ApiRouter = express.Router();
 
 ApiRouter.get('/home', (req,res) => {
-     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE'});
+     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER'});
 });
 
 ApiRouter.get('/about', (req,res) => {
@@ -60,13 +60,17 @@ ApiRouter.get('/contact', (req,res) => {
      return res.json({message: 'ASDFASDSD, HELLO FROM EXPRESS. THIS WILL BE THE CONTACT PAGE'});
 });
 
-// app.get('/home', (req,res) => {
-//      return res.json({message: 'HELLO FROM EXPRESS. THIS IS HOMEPAGE DATA'});
-// });
+app.get('/home', (req,res) => {
+     return res.json({message: 'HELLO FROM EXPRESS. THIS IS HOMEPAGE DATA FROM APP'});
+});
 
-// app.get('/api', (req,res) => {
+// ApiRouter.get('/api', (req,res) => {
 //     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 // });
+
+app.get('/api', (req,res) => {
+    return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
+});
 
 app.use('/api', ApiRouter);
 
