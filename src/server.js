@@ -49,26 +49,30 @@ app.use((req, res, next) => {
 // })
 const ApiRouter = express.Router();
 
-ApiRouter.get('/home', (req,res) => {
-     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER'});
-});
-
-ApiRouter.get('/about', (req,res) => {
-     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE ABOUT PAGE'});
-});
-ApiRouter.get('/contact', (req,res) => {
-     return res.json({message: 'ASDFASDSD, HELLO FROM EXPRESS. THIS WILL BE THE CONTACT PAGE'});
-});
+// ApiRouter.get('/home', (req,res) => {
+//      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
+// });
 
 app.get('/home', (req,res) => {
-     return res.json({message: 'HELLO FROM EXPRESS. THIS IS HOMEPAGE DATA FROM APP'});
+     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
 
-// ApiRouter.get('/api', (req,res) => {
+// ApiRouter.get('/about', (req,res) => {
+//      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE ABOUT PAGE'});
+// });
+// ApiRouter.get('/contact', (req,res) => {
+//      return res.json({message: 'ASDFASDSD, HELLO FROM EXPRESS. THIS WILL BE THE CONTACT PAGE'});
+// });
+
+// ApiRouter.get('/contact', (req,res) => {
+//      return res.json({message: 'ASDFASDSD, HELLO FROM EXPRESS. THIS WILL BE THE CONTACT PAGE'});
+// });
+
+// ApiRouter.get('/', (req,res) => {
 //     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 // });
 
-app.get('/api', (req,res) => {
+app.get('/', (req,res) => {
     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 });
 
