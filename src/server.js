@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 import cors from 'cors';
 
+import "dotenv/config.js";
 
 const corsOptions = {
     origin: ["http://localhost:5173"]
@@ -28,7 +29,7 @@ const HOST = process.env.SERVER_HOST;
 const PORT = process.env.SERVER_PORT;
 
 
-import "dotenv/config.js";
+
  // Now you can access env variables using process.env
  const port = process.env.SERVER_PORT;
 
@@ -49,9 +50,9 @@ app.use((req, res, next) => {
 // })
 const ApiRouter = express.Router();
 
-// ApiRouter.get('/home', (req,res) => {
-//      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
-// });
+ApiRouter.get('/home', (req,res) => {
+     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
+});
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
