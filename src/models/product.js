@@ -21,7 +21,7 @@ const productSchema = new Schema ({
         type: String,
         required: true
     },
-    images: [ImageSchema],
+    // images: [ImageSchema],
     // geometry: {
     //     type: {
     //         type: String,
@@ -38,23 +38,23 @@ const productSchema = new Schema ({
         required: true,
         min: 0
     },
-    category: {
-        type: String,
-        lowercase: true,
-        enum: ['fruit', 'vegetable', 'dairy', 'meat', 'poultry']
-    },
-    description: String,
-    location: String,
-    reviews: [
-        {   
-            type: Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ],
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+    // category: {
+    //     type: String,
+    //     lowercase: true,
+    //     enum: ['fruit', 'vegetable', 'dairy', 'meat', 'poultry']
+    // },
+    // description: String,
+    // location: String,
+    // reviews: [
+    //     {   
+    //         type: Schema.Types.ObjectId,
+    //         ref: 'Review'
+    //     }
+    // ],
+    // author: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User'
+    // }
 }, opts);
 
 // productSchema.virtual('properties.popUpMarkup').get(function(){

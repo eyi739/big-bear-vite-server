@@ -14,7 +14,7 @@ const corsOptions = {
 
 mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
     .then(() => {
-        console.log("CONNECTION OPEN");
+        console.log("CONNECTION OPEN, DATABASE CONNECTED");
     })
     .catch(err => {
         console.log("THERE WAS AN ERROR");
@@ -27,8 +27,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 
 const HOST = process.env.SERVER_HOST;
 const PORT = process.env.SERVER_PORT;
-
-
 
  // Now you can access env variables using process.env
  const port = process.env.SERVER_PORT;
@@ -56,6 +54,18 @@ ApiRouter.get('/home', (req,res) => {
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
+});
+
+app.get('/makeproduct', async (req,res) => {
+     const product = new Product({name: 'Green Peas', price: 1.00});
+     await product.save();
+     res.send(product);
+});
+
+ApiRouter.get('/makeproduct', async (req,res) => {
+     const product = new Product({name: 'Green Peas', price: 1.00});
+     await product.save();
+     res.send(product);
 });
 
 // ApiRouter.get('/about', (req,res) => {
