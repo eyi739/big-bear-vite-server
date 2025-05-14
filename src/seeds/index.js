@@ -18,7 +18,7 @@ const seedDB = async () => {
     for(let i = 0; i < 50; i++) {
         const randomNum = Math.floor(Math.random() * 5)
         const prod = new Product({
-            name: `${products[randomNum].name}`,
+            title: `${products[randomNum].title}`,
             price: `${products[randomNum].price}`,
             category: `${products[randomNum].category}`,
         })

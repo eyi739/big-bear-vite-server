@@ -56,6 +56,13 @@ app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
 
+app.get('/products', async (req, res) => {
+    // const products = await Product.find({});
+    // res.render('/big-bear-vite/src/pages/Products/ProductIndex.jsx')
+    res.send('HELLO WORLD');
+    console.log('ALL PRODUCTS ROUTE FROM EXPRESS');    
+})
+
 app.get('/makeproduct', async (req,res) => {
      const product = new Product({name: 'Green Peas', price: 1.00});
      await product.save();

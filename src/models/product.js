@@ -5,22 +5,31 @@ import Review from './review.js';
 // const Review = require('./review')
 const Schema = mongoose.Schema;
 
-const ImageSchema = new Schema ({
-    url: String,
-    filename: String
-})
+// const ImageSchema = new Schema ({
+//     url: String,
+//     filename: String
+// })
 
-ImageSchema.virtual('thumbnail').get(function() {
-    return this.url.replace('/upload', '/upload/w_200')
-})
+// ImageSchema.virtual('thumbnail').get(function() {
+//     return this.url.replace('/upload', '/upload/w_200')
+// })
 
 const opts = { toJSON: {virtuals: true}}
 
 const productSchema = new Schema ({
-    name: {
+    title: {
         type: String,
         required: true
     },
+    price: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    category: {
+        type: String,
+        enum:['fruit', 'vegetable', 'dairy', 'meat', 'poultry']
+    }
     // images: [ImageSchema],
     // geometry: {
     //     type: {
@@ -33,11 +42,7 @@ const productSchema = new Schema ({
     //         required: true
     //     }
     // },
-    price: {
-        type: Number,
-        required: true,
-        min: 0
-    },
+    
     // category: {
     //     type: String,
     //     lowercase: true,
@@ -69,13 +74,13 @@ const productSchema = new Schema ({
 //     <p>${this.description.substring(0, 20)}...</p>`
 // });
 
-productSchema.post('findOneAndDelete', async function(doc){
-    await Review.deleteMany({
-        _id: {
-            $in: doc.reviews
-        }
-    })
-})
+// productSchema.post('findOneAndDelete', async function(doc){
+//     await Review.deleteMany({
+//         _id: {
+//             $in: doc.reviews
+//         }
+//     })
+// })
 
 const Product = mongoose.model('Product', productSchema);
 
