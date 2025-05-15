@@ -1,10 +1,10 @@
-import Product, { deleteMany } from '../models/product';
+import Product from '../models/product.js';
 import { connect } from "mongoose";
-import { products } from './products';
+import { products } from './products.js';
 
 connect('mongodb://127.0.0.1:27017/bigBearVite')
     .then(() => {
-        console.log("CONNECTION OPEN");
+        console.log("DATABASE CONNECTED");
     })
     .catch(err => {
         console.log("THERE WAS AN ERROR");
@@ -14,7 +14,7 @@ connect('mongodb://127.0.0.1:27017/bigBearVite')
 const sample = array => array[Math.floor(Math.random() * array.length)]
 
 const seedDB = async () => {
-    await deleteMany({});
+    await Product.deleteMany({});
     for(let i = 0; i < 50; i++) {
         const randomNum = Math.floor(Math.random() * 5)
         const prod = new Product({
@@ -25,5 +25,10 @@ const seedDB = async () => {
         await prod.save();
     }
 }
+// const seedDB = async () => {
+//     await deleteMany({});
+    
+//     }
+// }
 
 seedDB();

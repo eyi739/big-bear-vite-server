@@ -1,6 +1,6 @@
 import express from 'express';
 
-import Product from './models/product.js'
+import Product from '../src/models/product.js'
 import mongoose from 'mongoose';
 
 import path from 'path';
@@ -57,10 +57,9 @@ app.get('/home', (req,res) => {
 });
 
 app.get('/products', async (req, res) => {
-    // const products = await Product.find({});
-    // res.render('/big-bear-vite/src/pages/Products/ProductIndex.jsx')
-    res.send('HELLO WORLD');
-    console.log('ALL PRODUCTS ROUTE FROM EXPRESS');    
+    const products = await Product.find({});
+    res.render('../../big-bear-vite/src/pages/Products/ProductIndex.jsx', {products});
+    // const products = await Product.find({}) 
 })
 
 app.get('/makeproduct', async (req,res) => {

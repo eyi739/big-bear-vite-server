@@ -1,25 +1,30 @@
 export const products = [{
-    Title: 'Chicken Stalks',
+    title: 'Chicken',
+    price: 1.00,
+    category: 'poultry'
+},
+{
+    title: 'Green Peas',
     price: 1.00,
     category: 'vegetable'
 },
 {
-    Title: 'Green Peas',
+    Title: 'Beef Shoulder',
     price: 1.00,
-    category: 'vegetable'
+    category: 'meat'
 },
 {
-    Title: 'Curious Apples',
+    title: 'Curious Apples',
     price: 2.99,
     category: 'fruit'
 },
 {
-    Title: 'Asaparagus',
+    title: 'Asaparagus',
     price: 1.00,
     category: 'vegetable'
 },
 {
-    Title: 'Chickpea',
+    title: 'Chickpea',
     price: 1.00,
     category: 'vegetable'
 }]
