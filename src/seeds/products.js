@@ -9,7 +9,7 @@ export const products = [{
     category: 'vegetable'
 },
 {
-    Title: 'Beef Shoulder',
+    title: 'Beef Shoulder',
     price: 1.00,
     category: 'meat'
 },

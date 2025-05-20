@@ -3,10 +3,11 @@ import express from 'express';
 import Product from '../src/models/product.js'
 import mongoose from 'mongoose';
 
+import { fileURLToPath } from 'url';
 import path from 'path';
 import cors from 'cors';
-
 import "dotenv/config.js";
+import { create } from 'domain';
 
 const corsOptions = {
     origin: ["http://localhost:5173"]
@@ -46,7 +47,23 @@ app.use((req, res, next) => {
 // db.once("open", () => {
 //     console.log("Database connected")
 // })
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static('dist/client'));
+
 const ApiRouter = express.Router();
+
+// app.get('/', (req,res) => {
+//     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
+// });
+
+app.get('/', async (req,res) => {
+    const { html } = await render(req.url);
+    res.send(html);
+});
 
 ApiRouter.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
@@ -59,7 +76,6 @@ app.get('/home', (req,res) => {
 app.get('/products', async (req, res) => {
     const products = await Product.find({});
     res.render('../../big-bear-vite/src/pages/Products/ProductIndex.jsx', {products});
-    // const products = await Product.find({}) 
 })
 
 app.get('/makeproduct', async (req,res) => {
@@ -68,11 +84,11 @@ app.get('/makeproduct', async (req,res) => {
      res.send(product);
 });
 
-ApiRouter.get('/makeproduct', async (req,res) => {
-     const product = new Product({name: 'Green Peas', price: 1.00});
-     await product.save();
-     res.send(product);
-});
+// ApiRouter.get('/makeproduct', async (req,res) => {
+//      const product = new Product({name: 'Green Peas', price: 1.00});
+//      await product.save();
+//      res.send(product);
+// });
 
 // ApiRouter.get('/about', (req,res) => {
 //      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE ABOUT PAGE'});
@@ -89,11 +105,10 @@ ApiRouter.get('/makeproduct', async (req,res) => {
 //     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 // });
 
-app.get('/', (req,res) => {
-    return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
-});
+
 
 app.use('/api', ApiRouter);
+
 
 app.listen(8080, HOST, port, () => {
     console.log(`Server started on port ${HOST}: ${port}`);
