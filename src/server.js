@@ -51,32 +51,35 @@ app.use((req, res, next) => {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-app.use(express.static('dist/client'));
-
 const ApiRouter = express.Router();
+
+app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
 
 // app.get('/', (req,res) => {
 //     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 // });
 
-app.get('/', async (req,res) => {
-    const { html } = await render(req.url);
-    res.send(html);
+app.get('/products', async (req,res) => {
+    try {
+        const products = await Product.find();
+        res.json(products);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
 });
 
-ApiRouter.get('/home', (req,res) => {
-     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
-});
+// ApiRouter.get('/home', (req,res) => {
+//      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
+// });
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
 
-app.get('/products', async (req, res) => {
-    const products = await Product.find({});
-    res.render('../../big-bear-vite/src/pages/Products/ProductIndex.jsx', {products});
-})
+// app.get('/products', async (req, res) => {
+//     const products = await Product.find({});
+//     res.render('../../big-bear-vite/src/pages/Products/ProductIndex.jsx', {products});
+// })
 
 app.get('/makeproduct', async (req,res) => {
      const product = new Product({name: 'Green Peas', price: 1.00});
@@ -107,7 +110,7 @@ app.get('/makeproduct', async (req,res) => {
 
 
 
-app.use('/api', ApiRouter);
+// app.use('/api', ApiRouter);
 
 
 app.listen(8080, HOST, port, () => {
