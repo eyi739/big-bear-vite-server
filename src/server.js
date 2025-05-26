@@ -55,9 +55,9 @@ const ApiRouter = express.Router();
 
 app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
 
-// app.get('/', (req,res) => {
-//     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
-// });
+app.get('/api', (req,res) => {
+    return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
+});
 
 app.get('/products', async (req,res) => {
     try {
