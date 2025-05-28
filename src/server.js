@@ -59,6 +59,10 @@ app.get('/api', (req,res) => {
     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
 });
 
+ApiRouter.get('/', (req,res) => {
+    return res.json({message: 'this is weird'})
+});
+
 app.get('/products', async (req,res) => {
     try {
         const products = await Product.find();
