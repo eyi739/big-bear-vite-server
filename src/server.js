@@ -55,64 +55,31 @@ const ApiRouter = express.Router();
 
 app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
 
-app.get('/api', (req,res) => {
-    return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
-});
-
-ApiRouter.get('/', (req,res) => {
-    return res.json({message: 'this is weird'})
-});
-
-app.get('/products', async (req,res) => {
-    try {
-        const products = await Product.find();
-        res.json(products);
-      } catch (error) {
-        res.status(500).json({ message: error.message });
-      }
-});
-
-// ApiRouter.get('/home', (req,res) => {
-//      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER HEHEHHHE'});
+// app.get('/api/products', (req,res) => {
+//     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes", "jello" ]});
 // });
+
+app.get('/api/products', async (req,res) => {
+    // res.sendFile(path.join(__dirname, '../../big-bear-vite/dist/index.html'));
+    // const products = await Product.find({});
+    // return res.render({products});
+    try {
+       const products = await Product.find({}); // Fetch data from your MongoDB collection
+       res.json(products);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+});
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
-
-// app.get('/products', async (req, res) => {
-//     const products = await Product.find({});
-//     res.render('../../big-bear-vite/src/pages/Products/ProductIndex.jsx', {products});
-// })
 
 app.get('/makeproduct', async (req,res) => {
      const product = new Product({name: 'Green Peas', price: 1.00});
      await product.save();
      res.send(product);
 });
-
-// ApiRouter.get('/makeproduct', async (req,res) => {
-//      const product = new Product({name: 'Green Peas', price: 1.00});
-//      await product.save();
-//      res.send(product);
-// });
-
-// ApiRouter.get('/about', (req,res) => {
-//      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE ABOUT PAGE'});
-// });
-// ApiRouter.get('/contact', (req,res) => {
-//      return res.json({message: 'ASDFASDSD, HELLO FROM EXPRESS. THIS WILL BE THE CONTACT PAGE'});
-// });
-
-// ApiRouter.get('/contact', (req,res) => {
-//      return res.json({message: 'ASDFASDSD, HELLO FROM EXPRESS. THIS WILL BE THE CONTACT PAGE'});
-// });
-
-// ApiRouter.get('/', (req,res) => {
-//     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes" ]});
-// });
-
-
 
 // app.use('/api', ApiRouter);
 
