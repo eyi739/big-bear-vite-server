@@ -71,6 +71,10 @@ app.get('/api/products', async (req,res) => {
      }
 });
 
+// app.get('/api/products:id', async (req, res) => {
+//     res.render('../../big-bear-vite/src/client/pages/Products/ShowPage.jsx')
+// })
+
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
