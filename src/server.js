@@ -54,6 +54,8 @@ const __dirname = path.dirname(__filename);
 const ApiRouter = express.Router();
 
 app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
+// app.set('view engine', 'jsx');
+// app.set('views', path.join(__dirname, '../../big-bear-vite/src/pages'))
 
 // app.get('/api/products', (req,res) => {
 //     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes", "jello" ]});
@@ -70,10 +72,6 @@ app.get('/api/products', async (req,res) => {
        res.status(500).json({ error: error.message });
      }
 });
-
-// app.get('/api/products:id', async (req, res) => {
-//     res.render('../../big-bear-vite/src/client/pages/Products/ShowPage.jsx')
-// })
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
