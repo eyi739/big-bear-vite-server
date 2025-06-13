@@ -73,15 +73,26 @@ app.get('/api/products', async (req,res) => {
      }
 });
 
+app.get('/products/:productId', async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.json(product);
+})
+
+app.get('/products/new', async (req, res) => {
+     const product = new Product({name: 'Green Peas', price: 1.00});
+     await product.save();
+     res.send(product);
+})
+
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
 
-app.get('/makeproduct', async (req,res) => {
-     const product = new Product({name: 'Green Peas', price: 1.00});
-     await product.save();
-     res.send(product);
-});
+// app.get('/makeproduct', async (req,res) => {
+//      const product = new Product({name: 'Green Peas', price: 1.00});
+//      await product.save();
+//      res.send(product);
+// });
 
 // app.use('/api', ApiRouter);
 
