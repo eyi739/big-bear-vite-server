@@ -8,6 +8,7 @@ import path from 'path';
 import cors from 'cors';
 import "dotenv/config.js";
 import { create } from 'domain';
+import { rmSync } from 'fs';
 
 const corsOptions = {
     origin: ["http://localhost:5173"]
@@ -57,6 +58,8 @@ app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
 // app.set('view engine', 'jsx');
 // app.set('views', path.join(__dirname, '../../big-bear-vite/src/pages'))
 
+app.use(express.urlencoded({extended: true}));
+
 // app.get('/api/products', (req,res) => {
 //     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes", "jello" ]});
 // });
@@ -73,16 +76,23 @@ app.get('/api/products', async (req,res) => {
      }
 });
 
+// app.get('/products/new', async (req, res) => {
+//     res.render('../../big-bear-vite/src/client/pages/products/MakeProductForm.jsx');
+// });
+
+app.post('/products', async (req, res) => {
+    const product = new Product(req.body.product);
+    await product.save();
+    res.redirect(`/products/${product._id}`)
+    // res.send(req.body); 
+})
+
 app.get('/products/:productId', async (req, res) => {
     const product = await Product.findById(req.params.id);
     res.json(product);
-})
+});
 
-app.get('/products/new', async (req, res) => {
-     const product = new Product({name: 'Green Peas', price: 1.00});
-     await product.save();
-     res.send(product);
-})
+
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});

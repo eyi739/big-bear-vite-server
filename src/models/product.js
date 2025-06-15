@@ -19,17 +19,17 @@ const opts = { toJSON: {virtuals: true}}
 const productSchema = new Schema ({
     title: {
         type: String,
-        required: true
+        required: false,
     },
-    price: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    category: {
-        type: String,
-        enum:['fruit', 'vegetable', 'dairy', 'meat', 'poultry']
-    }
+    // price: {
+    //     type: Number,
+    //     required: false,
+    //     min: 0
+    // },
+    // category: {
+    //     type: String,
+    //     enum:['fruit', 'vegetable', 'dairy', 'meat', 'poultry']
+    // }
     // images: [ImageSchema],
     // geometry: {
     //     type: {
