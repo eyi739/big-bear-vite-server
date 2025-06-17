@@ -55,19 +55,14 @@ const __dirname = path.dirname(__filename);
 const ApiRouter = express.Router();
 
 app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
-// app.set('view engine', 'jsx');
-// app.set('views', path.join(__dirname, '../../big-bear-vite/src/pages'))
 
-app.use(express.urlencoded({extended: true}));
+app.set('view engine', 'jsx');
+app.set('views', path.join(__dirname, '../../big-bear-vite/src/pages'))
 
-// app.get('/api/products', (req,res) => {
-//     return res.json({fruits: ["apple", "orange", "banana", "green grapes", "tomatoes", "jello" ]});
-// });
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
 app.get('/api/products', async (req,res) => {
-    // res.sendFile(path.join(__dirname, '../../big-bear-vite/dist/index.html'));
-    // const products = await Product.find({});
-    // return res.render({products});
     try {
        const products = await Product.find({}); // Fetch data from your MongoDB collection
        res.json(products);
@@ -81,18 +76,19 @@ app.get('/api/products', async (req,res) => {
 // });
 
 app.post('/products', async (req, res) => {
-    const product = new Product(req.body.product);
+    const product = new Product(req.body);
+    // express.json(product);
     await product.save();
-    res.redirect(`/products/${product._id}`)
-    // res.send(req.body); 
+    console.log(req.body);
+    // console.log(req.body.product);
+    // console.log(req.body);
+    // res.redirect(`/products/${product._id}`)
 })
 
 app.get('/products/:productId', async (req, res) => {
     const product = await Product.findById(req.params.id);
     res.json(product);
 });
-
-
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
