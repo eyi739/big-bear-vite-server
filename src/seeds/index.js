@@ -19,8 +19,8 @@ const seedDB = async () => {
         const randomNum = Math.floor(Math.random() * 5)
         const prod = new Product({
             title: `${products[randomNum].title}`,
-            // price: `${products[randomNum].price}`,
-            // category: `${products[randomNum].category}`,
+            price: `${products[randomNum].price}`,
+            category: `${products[randomNum].category}`,
         })
         await prod.save();
     }

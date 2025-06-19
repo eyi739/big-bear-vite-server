@@ -83,12 +83,21 @@ app.post('/products', async (req, res) => {
     // console.log(req.body.product);
     // console.log(req.body);
     // res.redirect(`/products/${product._id}`)
-})
+});
 
 app.get('/products/:productId', async (req, res) => {
     const product = await Product.findById(req.params.id);
     res.json(product);
 });
+
+app.get('/products/:productId/edit', async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.json(product);
+})
+
+
+
+
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
