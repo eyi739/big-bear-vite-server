@@ -85,6 +85,12 @@ app.post('/products', async (req, res) => {
     // res.redirect(`/products/${product._id}`)
 });
 
+app.put('/products/:productId', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(id, {...req.body});
+    console.log('put request from server.js');
+})
+
 app.get('/products/:productId', async (req, res) => {
     const product = await Product.findById(req.params.id);
     res.json(product);
