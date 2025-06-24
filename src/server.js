@@ -71,18 +71,10 @@ app.get('/api/products', async (req,res) => {
      }
 });
 
-// app.get('/products/new', async (req, res) => {
-//     res.render('../../big-bear-vite/src/client/pages/products/MakeProductForm.jsx');
-// });
-
 app.post('/products', async (req, res) => {
     const product = new Product(req.body);
-    // express.json(product);
     await product.save();
     console.log(req.body);
-    // console.log(req.body.product);
-    // console.log(req.body);
-    // res.redirect(`/products/${product._id}`)
 });
 
 app.put('/products/:productId', async (req, res) => {
@@ -101,7 +93,21 @@ app.get('/products/:productId/edit', async (req, res) => {
     res.json(product);
 })
 
+app.delete('/products/:productId', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedItem = await Item.findByIdAndDelete(id);
 
+    if (!deletedItem) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    res.status(200).json({ message: 'Item deleted successfully', deletedItem });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
 
