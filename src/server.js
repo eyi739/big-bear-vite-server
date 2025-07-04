@@ -66,6 +66,7 @@ app.get('/api/products', async (req,res) => {
     try {
        const products = await Product.find({}); // Fetch data from your MongoDB collection
        res.json(products);
+       
      } catch (error) {
        res.status(500).json({ error: error.message });
      }
@@ -78,14 +79,17 @@ app.post('/products', async (req, res) => {
 });
 
 app.put('/products/:productId', async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findByIdAndUpdate(id, {...req.body});
+    const { productId } = req.params;
+    const product = await Product.findByIdAndUpdate(productId, {...req.body});
     console.log('put request from server.js');
 })
 
 app.get('/products/:productId', async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    try {const product = await Product.findById(req.params.id);
     res.json(product);
+    } catch (error) {
+      res.status(500).json({message: error.message});
+    }
 });
 
 app.get('/products/:productId/edit', async (req, res) => {
@@ -96,12 +100,10 @@ app.get('/products/:productId/edit', async (req, res) => {
 app.delete('/products/:productId', async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedItem = await Item.findByIdAndDelete(id);
-
+    const deletedItem = await Product.findByIdAndDelete(id);
     if (!deletedItem) {
       return res.status(404).json({ message: 'Item not found' });
     }
-
     res.status(200).json({ message: 'Item deleted successfully', deletedItem });
   } catch (error) {
     console.error(error);
