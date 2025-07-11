@@ -85,19 +85,23 @@ app.put('/products/:productId', async (req, res) => {
 })
 
 app.get('/products/:productId', async (req, res) => {
-    try {const product = await Product.findById(req.params.id);
-    res.json(product);
+    try {
+      const product = await Product.findById(req.params.productId);
+      console.log('Product data:', product)
+      res.json(product);
+    
     } catch (error) {
       res.status(500).json({message: error.message});
     }
 });
 
 app.get('/products/:productId/edit', async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.productId);
     res.json(product);
 })
 
 app.delete('/products/:productId', async (req, res) => {
+  console.log('Hello does this delete work');
   try {
     const { id } = req.params;
     const deletedItem = await Product.findByIdAndDelete(id);
@@ -110,8 +114,6 @@ app.delete('/products/:productId', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-
 
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
