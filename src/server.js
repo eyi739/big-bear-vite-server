@@ -72,17 +72,30 @@ app.get('/api/products', async (req,res) => {
      }
 });
 
+app.get('/api/products/:productId', async (req, res) => {
+  const {productId} = req.params
+   try {
+      const product = await Product.findById(productId);
+      console.log('Product data:', product)
+      res.json(product);
+    
+    } catch (error) {
+      res.status(500).json({message: error.message});
+    }
+})
+
 app.post('/products', async (req, res) => {
     const product = new Product(req.body);
     await product.save();
     console.log(req.body);
 });
 
-app.put('/products/:productId', async (req, res) => {
+app.put('/api/products/:productId', async (req, res) => {
     const { productId } = req.params;
     const product = await Product.findByIdAndUpdate(productId, {...req.body});
+    console.log(product);
     console.log('put request from server.js');
-})
+});
 
 app.get('/products/:productId', async (req, res) => {
     try {
@@ -100,11 +113,11 @@ app.get('/products/:productId/edit', async (req, res) => {
     res.json(product);
 })
 
-app.delete('/products/:productId', async (req, res) => {
+app.delete('/api/products/:productId', async (req, res) => {
   console.log('Hello does this delete work');
+  const { productId } = req.params;
   try {
-    const { id } = req.params;
-    const deletedItem = await Product.findByIdAndDelete(id);
+    const deletedItem = await Product.findByIdAndDelete(productId);
     if (!deletedItem) {
       return res.status(404).json({ message: 'Item not found' });
     }
@@ -118,6 +131,10 @@ app.delete('/products/:productId', async (req, res) => {
 app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
+
+app.use((req,res)=> {
+  res.status(404).send('NOT FOUND');
+})
 
 // app.get('/makeproduct', async (req,res) => {
 //      const product = new Product({name: 'Green Peas', price: 1.00});
