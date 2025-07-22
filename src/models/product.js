@@ -21,6 +21,10 @@ const productSchema = new Schema ({
         type: String,
         required: true,
     },
+    image: {
+        type: String,
+        required: true,
+    },
     price: {
         type: Number,
         required: true,
@@ -29,7 +33,10 @@ const productSchema = new Schema ({
     category: {
         type: String,
         enum:['fruit', 'vegetable','poultry', 'dairy', 'meat', 'canned goods']
-    }
+    },
+    description: {
+        type: String,
+    },
     // images: [ImageSchema],
     // geometry: {
     //     type: {

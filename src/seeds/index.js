@@ -19,8 +19,10 @@ const seedDB = async () => {
         const randomNum = Math.floor(Math.random() * 5)
         const prod = new Product({
             title: `${products[randomNum].title}`,
+            image: `https://picsum.photos/400?random=${Math.random()}`,
             price: `${products[randomNum].price}`,
             category: `${products[randomNum].category}`,
+            description: "TRALALA",
         })
         await prod.save();
     }
