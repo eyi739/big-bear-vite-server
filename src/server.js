@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import cors from 'cors';
 import "dotenv/config.js";
+
+import catchAsync from './utils/catchAsync.js'
 import { create } from 'domain';
 import { rmSync } from 'fs';
 
@@ -62,6 +64,12 @@ app.set('views', path.join(__dirname, '../../big-bear-vite/src/pages'))
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
+// function wrapAsync(fn){
+//   return function (req, res, next) {
+//     fn(req,res,next).catch((e) => next(e))
+//   }
+// }
+
 app.get('/api/products', async (req,res) => {
     try {
        const products = await Product.find({}); // Fetch data from your MongoDB collection
@@ -72,46 +80,47 @@ app.get('/api/products', async (req,res) => {
      }
 });
 
-app.get('/api/products/:productId', async (req, res) => {
-  const {productId} = req.params
-   try {
-      const product = await Product.findById(productId);
-      console.log('Product data:', product)
-      res.json(product);
-    
-    } catch (error) {
-      res.status(500).json({message: error.message});
-    }
-})
+app.get('/api/products/:productId', catchAsync(async (req, res, next) => {
+  const { productId } = req.params;
+  const product = await Product.findById(productId);
 
-app.post('/products', async (req, res) => {
-    const product = new Product(req.body);
-    await product.save();
-    console.log(req.body);
-});
+  if (!product) {
+    const err = new Error("Product not found");
+    err.statusCode = 404;
+    return next(err); // Trigger error-handling middleware
+  }
 
-app.put('/api/products/:productId', async (req, res) => {
+  res.json(product);
+}));
+
+app.put('/api/products/:productId', catchAsync(async (req, res) => {
     const { productId } = req.params;
     const product = await Product.findByIdAndUpdate(productId, {...req.body});
     console.log(product);
     console.log('put request from server.js');
-});
+}));
 
-app.get('/products/:productId', async (req, res) => {
-    try {
+app.post('/products', catchAsync(async (req, res, next) => {
+    const product = new Product(req.body);
+    await product.save();
+    console.log(req.body);
+}));
+
+
+app.get('/products/:productId', catchAsync(async (req, res) => {
       const product = await Product.findById(req.params.productId);
       console.log('Product data:', product)
       res.json(product);
-    
-    } catch (error) {
-      res.status(500).json({message: error.message});
-    }
-});
+}));
 
-app.get('/products/:productId/edit', async (req, res) => {
-    const product = await Product.findById(req.params.productId);
-    res.json(product);
-})
+app.get('/products/:productId/edit', catchAsync(async (req, res, next) => {
+    try {
+      const product = await Product.findById(req.params.productId);
+      res.json(product);
+    } catch (e){
+      next(e)
+    }
+}));
 
 app.delete('/api/products/:productId', async (req, res) => {
   console.log('Hello does this delete work');
@@ -132,17 +141,15 @@ app.get('/home', (req,res) => {
      return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
 });
 
-app.use((req,res)=> {
-  res.status(404).send('NOT FOUND');
-})
+app.use((err, req, res, next) => {
+  // console.error(err.stack); // log for debugging
 
-// app.get('/makeproduct', async (req,res) => {
-//      const product = new Product({name: 'Green Peas', price: 1.00});
-//      await product.save();
-//      res.send(product);
-// });
+  // const statusCode = err.statusCode || 500;
+  // const message = err.message || 'Internal Server Error';
 
-// app.use('/api', ApiRouter);
+  // res.status(statusCode).json({ error: message });
+  res.send('BOY YOU DONE HIT THE EXPRESS ERROR HANDLER MIDDLEWARE');
+});
 
 
 app.listen(8080, HOST, port, () => {
