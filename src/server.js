@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { productSchema } from './schemas.js'
 import Product from '../src/models/product.js'
 import mongoose from 'mongoose';
 
@@ -8,9 +9,11 @@ import path from 'path';
 import cors from 'cors';
 import "dotenv/config.js";
 
-import catchAsync from './utils/catchAsync.js'
+import catchAsync from './utils/catchAsync.js';
+
 import { create } from 'domain';
 import { rmSync } from 'fs';
+import ExpressError from './utils/expressError.js';
 
 const corsOptions = {
     origin: ["http://localhost:5173"]
@@ -61,7 +64,7 @@ app.use(express.static(path.join(__dirname, '../../big-bear-vite/dist')));
 app.set('view engine', 'jsx');
 app.set('views', path.join(__dirname, '../../big-bear-vite/src/pages'))
 
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 // function wrapAsync(fn){
@@ -69,6 +72,16 @@ app.use(express.json());
 //     fn(req,res,next).catch((e) => next(e))
 //   }
 // }
+
+const validateProduct = (req, res, next) => {
+    const { error } = productSchema.validate(req.body)
+    if(error) {
+      const msg = error.details.map(el => el.message).join(',')
+      throw new ExpressError(msg, 400)
+    } else {
+      next();
+    }
+};
 
 app.get('/api/products', async (req,res) => {
     try {
@@ -100,7 +113,9 @@ app.put('/api/products/:productId', catchAsync(async (req, res) => {
     console.log('put request from server.js');
 }));
 
-app.post('/products', catchAsync(async (req, res, next) => {
+app.post('/products', validateProduct, catchAsync(async (req, res, next) => {
+  // if(!req.body) throw new ExpressError('Invalid Product Data', 400);
+  
     const product = new Product(req.body);
     await product.save();
     console.log(req.body);
@@ -142,13 +157,13 @@ app.get('/home', (req,res) => {
 });
 
 app.use((err, req, res, next) => {
-  // console.error(err.stack); // log for debugging
+  console.error(err.stack); // log for debugging
 
-  // const statusCode = err.statusCode || 500;
-  // const message = err.message || 'Internal Server Error';
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
 
-  // res.status(statusCode).json({ error: message });
-  res.send('BOY YOU DONE HIT THE EXPRESS ERROR HANDLER MIDDLEWARE');
+  res.status(statusCode).json({ error: message });
+  // res.send('BOY YOU DONE HIT THE EXPRESS ERROR HANDLER MIDDLEWARE');
 });
 
 
