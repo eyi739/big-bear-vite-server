@@ -1,12 +1,16 @@
 import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import multer from 'multer';
+import fs from 'fs';
+
 
 import { productSchema } from './schemas.js'
 import Product from '../src/models/product.js'
 import mongoose from 'mongoose';
 
 import { fileURLToPath } from 'url';
-import path from 'path';
-import cors from 'cors';
+
 import "dotenv/config.js";
 
 import catchAsync from './utils/catchAsync.js';
@@ -35,7 +39,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/bigBearVite')
 const HOST = process.env.SERVER_HOST;
 const PORT = process.env.SERVER_PORT;
 
- // Now you can access env variables using process.env
  const port = process.env.SERVER_PORT;
 
 const app = express();
@@ -83,6 +86,31 @@ const validateProduct = (req, res, next) => {
     }
 };
 
+// Ensure uploads directory exists, this creates the folder as well:
+const uploadDir = './uploads';
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir); // Uploads go to ./uploads folder
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${file.fieldname}${ext}`);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
+  }
+};
+
+const upload = multer({ storage });
+
 app.get('/api/products', async (req,res) => {
     try {
        const products = await Product.find({}); // Fetch data from your MongoDB collection
@@ -113,13 +141,45 @@ app.put('/api/products/:productId', catchAsync(async (req, res) => {
     console.log('put request from server.js');
 }));
 
-app.post('/products', validateProduct, catchAsync(async (req, res, next) => {
-  // if(!req.body) throw new ExpressError('Invalid Product Data', 400);
+// app.post('/products', validateProduct, catchAsync(async (req, res, next) => {
+//   // if(!req.body) throw new ExpressError('Invalid Product Data', 400);
   
-    const product = new Product(req.body);
-    await product.save();
-    console.log(req.body);
-}));
+//     const product = new Product(req.body);
+//     await product.save();
+//     console.log(req.body);
+// }));
+
+app.post('/products', upload.single('imageFile'), catchAsync(async (req, res, next) => {
+    const { title, price, category, description, image } = req.body;
+
+    // Manual validation
+    const { error } = productSchema.validate({ title, price, category, description });
+    if (error) {
+      throw new ExpressError(error.details.map(el => el.message).join(','), 400);
+    }
+
+    // Check for file OR image URL
+    let imagePath;
+    if (req.file) {
+      imagePath = `/uploads/${req.file.filename}`;
+    } else if (image && /^https?:\/\/.+/i.test(image)) {
+      imagePath = image; // Use URL directly
+    } else {
+      throw new ExpressError('An image file or valid image URL is required', 400);
+    }
+
+    const newProduct = new Product({
+      title,
+      price,
+      category,
+      description,
+      image: imagePath,
+    });
+
+    await newProduct.save();
+    res.status(201).json(newProduct);
+  })
+);
 
 
 app.get('/products/:productId', catchAsync(async (req, res) => {
