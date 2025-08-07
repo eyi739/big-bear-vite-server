@@ -1,8 +1,4 @@
 import mongoose from 'mongoose';
-import Review from './review.js';
-
-// const mongoose = require('mongoose');
-// const Review = require('./review')
 const Schema = mongoose.Schema;
 
 // const ImageSchema = new Schema ({
@@ -36,6 +32,12 @@ const productSchema = new Schema ({
     description: {
         type: String,
     },
+    reviews: [
+        {   
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ],
     // images: [ImageSchema],
     // geometry: {
     //     type: {
