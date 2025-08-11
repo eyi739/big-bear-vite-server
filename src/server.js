@@ -4,9 +4,9 @@ import cors from 'cors';
 import multer from 'multer';
 import fs from 'fs';
 
-
-import { productSchema } from './schemas.js'
-import Product from '../src/models/product.js'
+import { productSchema } from './schemas.js';
+import Product from '../src/models/product.js';
+import Review from '../src/models/review.js';
 import mongoose from 'mongoose';
 
 import { fileURLToPath } from 'url';
@@ -212,9 +212,28 @@ app.delete('/api/products/:productId', async (req, res) => {
   }
 });
 
-app.get('/home', (req,res) => {
-     return res.json({message: 'HELLO FROM EXPRESS. THIS WILL BE THE HOME PAGE APIROUTER hehe'});
-});
+app.post('/api/products/:productId/reviews', catchAsync(async (req, res) => {
+  const { productId } = req.params;
+  
+  const product = await Product.findById(productId);
+  if (!product) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  // Create a new review (make sure req.body.review matches your schema)
+  const review = new Review(req.body.review);
+
+  // Save the review
+  await review.save();
+
+  // Add review reference to the product
+  product.reviews.push(review);
+  await product.save();
+
+  // Respond with the saved review
+  res.status(201).json(review);
+}));
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack); // log for debugging
