@@ -4,7 +4,7 @@ import cors from 'cors';
 import multer from 'multer';
 import fs from 'fs';
 
-import { productSchema } from './schemas.js';
+import { productSchema, reviewSchema } from './schemas.js';
 import Product from '../src/models/product.js';
 import Review from '../src/models/review.js';
 import mongoose from 'mongoose';
@@ -111,6 +111,16 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage });
 
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body.review)
+  if(error) {
+      const msg = error.details.map(el => el.message).join(',')
+      throw new ExpressError(msg, 400)
+    } else {
+      next();
+    }
+}
+
 app.get('/api/products', async (req,res) => {
     try {
        const products = await Product.find({}); // Fetch data from your MongoDB collection
@@ -212,7 +222,7 @@ app.delete('/api/products/:productId', async (req, res) => {
   }
 });
 
-app.post('/api/products/:productId/reviews', catchAsync(async (req, res) => {
+app.post('/api/products/:productId/reviews', validateReview, catchAsync(async (req, res) => {
   const { productId } = req.params;
   
   const product = await Product.findById(productId);
@@ -223,10 +233,8 @@ app.post('/api/products/:productId/reviews', catchAsync(async (req, res) => {
   // Create a new review (make sure req.body.review matches your schema)
   const review = new Review(req.body.review);
 
-  // Save the review
   await review.save();
 
-  // Add review reference to the product
   product.reviews.push(review);
   await product.save();
 
