@@ -106,6 +106,72 @@ app.get('/api/products/:productId', catchAsync(async (req, res) => {
   });
 }));
 
+app.delete('/api/products/:productId', catchAsync(async (req, res) => {
+  const { productId } = req.params;
+
+  const product = await Product.findById(productId).populate("reviews");
+  if (!product) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  // Delete associated reviews
+  await Review.deleteMany({ _id: { $in: product.reviews } });
+
+  // Delete local image file if it exists in uploads
+  if (product.image && product.image.startsWith('/uploads/')) {
+    const imagePath = path.join(__dirname, '..', product.image);
+    fs.unlink(imagePath, err => {
+      if (err) {
+        console.error('Error deleting image:', err);
+      }
+    });
+  }
+
+  // Delete the product
+  await Product.findByIdAndDelete(productId);
+
+  res.json({ message: 'Product and associated reviews deleted successfully' });
+}));
+
+app.put('/api/products/:productId', upload.single('imageFile'), async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    // Build update object
+    const updateData = {};
+
+    // Handle JSON fields
+    if (req.body.title) updateData.title = req.body.title;
+    if (req.body.price) updateData.price = parseFloat(req.body.price);
+    if (req.body.category) updateData.category = req.body.category;
+    if (req.body.description) updateData.description = req.body.description;
+
+    // Handle image
+    if (req.file) {
+      // File was uploaded
+      updateData.image = `/uploads/${req.file.filename}`;
+    } else if (req.body.image) {
+      // Image URL provided
+      updateData.image = req.body.image;
+    }
+
+    // Update product in DB
+    const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, {
+      new: true, // return the updated document
+      runValidators: true, 
+    });
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json({ product: updatedProduct });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error', details: err.message });
+  }
+});
+
 app.post('/products', upload.single('imageFile'), catchAsync(async (req, res) => {
   const { title, price, category, description, image } = req.body;
 
